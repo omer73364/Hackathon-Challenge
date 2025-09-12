@@ -1,6 +1,6 @@
-const app = require('./app');
-const db = require('./db'); 
-const { saveBase64Image, storeFingerprintInDB, broadcastData } = require('./helpers');
+const app = require('./src/app');
+const db = require('./src/db'); 
+const { saveBase64Image, storeFingerprintInDB, broadcastData } = require('./src/helpers');
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
