@@ -4,6 +4,11 @@ function saveBase64Image(dataUrl, filename) {
   const filePath = `./public/${filename}`;
   const base64Data = dataUrl.replace(/^data:[^;]+;base64,/, "").trim();
   const buffer = Buffer.from(base64Data, "base64");
+
+  if (!fs.existsSync("./public")) {
+    fs.mkdirSync("./public");
+  }
+  
   fs.writeFileSync(filePath, buffer);
 }
 
