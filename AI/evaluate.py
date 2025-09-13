@@ -2,8 +2,8 @@
 # This is a template for you to expand with your dataset and logic
 
 from preprocess import preprocess_image
-from feature_extraction import extract_features
-from matcher import match_features
+from feature_extraction import extract_minutiae_features
+from matcher import match_minutiae_features
 from utils import list_images
 import cv2
 
@@ -15,13 +15,8 @@ images1 = list_images(folder1)
 images2 = list_images(folder2)
 
 for img1_path in images1:
-    img1 = preprocess_image(img1_path)
-    kp1, desc1 = extract_features(img1)
+    term1, bif1 = extract_minutiae_features(img1_path)
     for img2_path in images2:
-        img2 = preprocess_image(img2_path)
-        kp2, desc2 = extract_features(img2)
-        if desc1 is not None and desc2 is not None:
-            good_matches = match_features(desc1, desc2)
-            print(f"{img1_path} vs {img2_path}: {len(good_matches)} good matches")
-        else:
-            print(f"No descriptors for {img1_path} or {img2_path}")
+        term2, bif2 = extract_minutiae_features(img2_path)
+        match_score = match_minutiae_features(term1, bif1, term2, bif2)
+        print(f"{img1_path} vs {img2_path}: {match_score} minutiae matches")
