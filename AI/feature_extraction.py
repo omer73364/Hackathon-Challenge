@@ -1,78 +1,63 @@
-# Feature extraction for fingerprint images
-# Using advanced OpenCV techniques for a robust feature set
+# feature_extraction.py
+# A robust, template-based feature extraction pipeline for fingerprints.
 
 import cv2
 import numpy as np
-from skimage.feature import hog
-from skimage.feature import local_binary_pattern
 
 def extract_features(image):
     """
-    Extracts a comprehensive set of features from a fingerprint image for robust matching.
-    This includes Gabor filter responses, minutiae points, LBP, and HOG features.
+    Creates a simplified but effective feature representation of the fingerprint
+    focusing on ridge patterns and local intensity distributions.
     """
-    # 1. Preprocessing
+    # Convert to grayscale if needed
     if len(image.shape) > 2:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     
+    # Resize to standard size
     image = cv2.resize(image, (256, 256))
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    image = clahe.apply(image)
-
-    # 2. Gabor Filter Bank for Ridge Texture
-    gabor_features = []
-    for theta in np.arange(0, np.pi, np.pi / 4):  # 4 orientations
-        kernel = cv2.getGaborKernel((21, 21), 5.0, theta, 10.0, 0.5, 0, ktype=cv2.CV_32F)
-        filtered = cv2.filter2D(image, cv2.CV_8UC3, kernel)
-        gabor_features.extend(cv2.mean(filtered))
-
-    # 3. Minutiae Detection (Endings and Bifurcations)
-    _, binary = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     
-    # Skeletonization (thinning) without ximgproc
-    skeleton = np.zeros(binary.shape, np.uint8)
-    element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3,3))
-    temp_binary = binary.copy()
-
-    while True:
-        eroded = cv2.erode(temp_binary, element)
-        temp = cv2.dilate(eroded, element)
-        temp = cv2.subtract(temp_binary, temp)
-        skeleton = cv2.bitwise_or(skeleton, temp)
-        temp_binary = eroded.copy()
-        if cv2.countNonZero(temp_binary) == 0:
-            break
+    # Basic contrast enhancement
+    image = cv2.equalizeHist(image)
     
-    minutiae_endings = 0
-    minutiae_bifurcations = 0
-    h, w = skeleton.shape
-    for i in range(1, h - 1):
-        for j in range(1, w - 1):
-            if skeleton[i, j] == 255:
-                p = skeleton[i-1:i+2, j-1:j+2]
-                p[1, 1] = 0
-                neighbors = np.sum(p) / 255
-                if neighbors == 1:
-                    minutiae_endings += 1
-                elif neighbors == 3:
-                    minutiae_bifurcations += 1
+    # Initialize feature vector
+    feature_vector = []
+    block_size = 16
     
-    # 4. Local Binary Patterns (LBP) for Texture
-    lbp = local_binary_pattern(image, P=8, R=1, method='uniform')
-    (lbp_hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, 11), range=(0, 10))
-    lbp_hist = lbp_hist.astype("float")
-    lbp_hist /= (lbp_hist.sum() + 1e-6)
+    # Grid-based feature extraction
+    for y in range(0, image.shape[0], block_size):
+        for x in range(0, image.shape[1], block_size):
+            # Extract block
+            block = image[y:min(y+block_size, image.shape[0]), 
+                         x:min(x+block_size, image.shape[1])]
+            
+            if block.shape[0] < block_size or block.shape[1] < block_size:
+                continue
+                
+            # 1. Block statistics
+            mean_val = np.mean(block)
+            std_val = np.std(block)
+            feature_vector.extend([mean_val/255.0, std_val/255.0])
+            
+            # 2. Simple gradient features
+            gx = cv2.Sobel(block, cv2.CV_32F, 1, 0, ksize=3)
+            gy = cv2.Sobel(block, cv2.CV_32F, 0, 1, ksize=3)
+            
+            # Gradient magnitude and direction
+            magnitude = np.sqrt(gx*gx + gy*gy)
+            angle = np.arctan2(gy, gx)
+            
+            # Add statistical features of gradients
+            feature_vector.extend([
+                np.mean(magnitude)/255.0,
+                np.std(magnitude)/255.0,
+                np.cos(2*np.mean(angle)),  # Ridge orientation
+                np.sin(2*np.mean(angle))
+            ])
 
-    # 5. Histogram of Oriented Gradients (HOG) for Shape
-    hog_features = hog(image, orientations=8, pixels_per_cell=(16, 16),
-                       cells_per_block=(1, 1), visualize=False, block_norm='L2-Hys')
-
-    # 6. Combine all features into a dictionary
-    features = {
-        "gabor": np.array(gabor_features),
-        "minutiae": np.array([minutiae_endings, minutiae_bifurcations]),
-        "lbp": lbp_hist,
-        "hog": hog_features
-    }
+    # Convert to numpy array and normalize
+    feature_vector = np.array(feature_vector, dtype=np.float32)
+    norm = np.linalg.norm(feature_vector)
+    if norm > 0:
+        feature_vector = feature_vector / norm
     
-    return features
+    return feature_vector
