@@ -9,6 +9,7 @@ const {
   storePersonInDB,
   getPersons,
   getPersonFingerprints,
+  getDashboardStatistics,
 } = require("./src/helpers");
 
 app.get("/", (req, res) => {
@@ -27,6 +28,11 @@ app.get("/persons/:id", async (req, res) => {
   return res.send(await getPersonFingerprints(req.params.id));
 });
 
+app.get('/dashboard', async (req, res) => {
+  const statistics = await getDashboardStatistics()
+  return res.send(statistics);
+});
+
 // add person
 app.post("/person", async (req, res) => {
   const { name, birthday, phone, address, gender, fingerprints } = req.body;
@@ -39,15 +45,17 @@ app.post("/person", async (req, res) => {
       fingerprint_img: fingerprint,
     });
   }
+  const statistics = await getDashboardStatistics()
+  
   res.status(200).send({ message: "Person added successfully" });
 });
 
 app.post("/fingerprint", async (req, res) => {
-  const { name = null, matched, fingerprint_img, score } = req.body;
-
+  const { name = null, matched, fingerprint_img, score, latency } = req.body;
+  
   const filename = `${Date.now()}.png`;
   const fileUrl = `http://${req.get("host")}/${filename}`;
-  const data = { name, matched, score, fileUrl };
+  const data = { name, matched, score, fileUrl, latency };
 
   saveBase64Image(fingerprint_img, filename);
   await storeFingerprintLogInDB(data);

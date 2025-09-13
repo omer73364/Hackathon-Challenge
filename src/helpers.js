@@ -69,6 +69,34 @@ function broadcastData(data) {
   });
 }
 
+async function getDashboardStatistics() {
+  const statistics = {
+    totalPersons: (await getPersons())?.length,
+    totalFingerprints: (await getFingerprintsLog())?.length,
+    totalMatched: (await getFingerprintsLog())?.filter((log) => log.matched).length,
+    totalUnmatched: (await getFingerprintsLog())?.filter((log) => !log.matched).length,
+    checkedToday: (await getFingerprintsLog())?.filter((log) => log.created_at.toDateString() === new Date().toDateString()).length,
+    checkedYesterday: (await getFingerprintsLog())?.filter((log) => log.created_at.toDateString() === new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString()).length,
+    matchedToday: (await getFingerprintsLog())?.filter((log) => log.matched && log.created_at.toDateString() === new Date().toDateString()).length,
+    matchedYesterday: (await getFingerprintsLog())?.filter((log) => log.matched && log.created_at.toDateString() === new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString()).length,
+    unmatchedToday: (await getFingerprintsLog())?.filter((log) => !log.matched && log.created_at.toDateString() === new Date().toDateString()).length,
+    unmatchedYesterday: (await getFingerprintsLog())?.filter((log) => !log.matched && log.created_at.toDateString() === new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString()).length,
+    matchedPerDay: (await getFingerprintsLog())
+      ?.reduce((acc, log) => {
+        const date = log.created_at.toDateString();
+        if (!acc[date]) {
+          acc[date] = 0;
+        }
+        if (log.matched) {
+          acc[date]++;
+        }
+        return acc;
+      }, {})
+  
+  };
+  return statistics;
+}
+
 module.exports = {
   saveBase64Image,
   storeFingerprintLogInDB,
@@ -78,5 +106,6 @@ module.exports = {
   storePersonFingerprintInDB,
   getFingerprintsLog,
   getPersons,
-  getPersonFingerprints
+  getPersonFingerprints,
+  getDashboardStatistics
 };
