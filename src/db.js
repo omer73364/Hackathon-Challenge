@@ -1,5 +1,6 @@
 // db.js
 const mysql = require("mysql2/promise"); // Using the promise-based API
+const runMigration = require("./migration");
 require("dotenv").config(); // For environment variables
 
 const pool = mysql.createPool({
@@ -12,20 +13,6 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-pool.execute(`
-    CREATE TABLE IF NOT EXISTS fingerprints (
-      id int(11) NOT NULL AUTO_INCREMENT,
-      name varchar(255) DEFAULT NULL,
-      fingerprint_img varchar(255) NOT NULL,
-      matched tinyint(1) NOT NULL,
-      score int(11) NOT NULL,
-      created_at timestamp NOT NULL DEFAULT current_timestamp(),
-      PRIMARY KEY (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-`).then(() => {
-  console.log("Table `fingerprints` created if not exist");
-}).catch((error) => {
-  console.error("Error creating table `fingerprints`: ", error);
-});
+runMigration(pool)
 
 module.exports = pool;
