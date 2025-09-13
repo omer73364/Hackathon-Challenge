@@ -3,8 +3,8 @@
 
 import os
 from preprocess import preprocess_image
-from feature_extraction import extract_minutiae_features
-# from matcher import match_minutiae_features  # Not used in current logic
+from feature_extraction import extract_features
+from matcher import match_features
 from utils import list_images
 import cv2
 import requests
@@ -13,9 +13,7 @@ import base64
 # Path to the latest scanned fingerprint (from scanbmp.py)
 INPUT_SCAN_PATH = os.path.join('scans', 'input_scan.bmp')
 DATASET_DIR = 'enhanced_dataset'
-MATCH_THRESHOLD = 1  # Lowered threshold for easier recognition
-import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
+MATCH_THRESHOLD = 30  # Minimum matches required for valid identification
 
 best_match = None
 best_score = 0
@@ -39,9 +37,8 @@ while True:
     last_mtime = mtime
     print(f"\nNew scan detected at {time.ctime(mtime)}. Matching...")
     try:
-        # Preprocess image if needed, or use raw image path
-        input_img_path = INPUT_SCAN_PATH
-        input_terminations, input_bifurcations = extract_minutiae_features(input_img_path)
+        input_img = preprocess_image(INPUT_SCAN_PATH)
+        input_feats = extract_features(input_img)
     except Exception as e:
         print(f"Error reading input scan: {e}")
         continue
@@ -58,72 +55,76 @@ while True:
     people_found = os.listdir(dataset_root)
     print(f"Found people: {people_found}")
     
-    any_images = False
     for person in people_found:
         person_dir = os.path.join(dataset_root, person)
         if not os.path.isdir(person_dir):
             continue
         images_in_person = list_images(person_dir)
         print(f"Person {person}: found {len(images_in_person)} images")
-        if images_in_person:
-            any_images = True
+        
         for img_path in images_in_person:
-            db_img_path = img_path
-            db_terminations, db_bifurcations = extract_minutiae_features(db_img_path)
-            # Simple matching: count number of similar minutiae (can be improved)
-            score = min(len(input_terminations), len(db_terminations)) + min(len(input_bifurcations), len(db_bifurcations))
-            print(f"  Minutiae match score: {score} for {img_path}")
+            db_img = preprocess_image(img_path)
+            db_feats = extract_features(db_img)
+            # Try both SIFT and ORB, aggregate best score
+            score = 0
+            for method in ['sift', 'orb']:
+                kp1, desc1 = input_feats.get(method, ([], None))
+                kp2, desc2 = db_feats.get(method, ([], None))
+                if desc1 is not None and desc2 is not None and len(desc1) > 0 and len(desc2) > 0:
+                    try:
+                        good_matches = match_features(desc1, desc2, method=method)
+                        match_score = len(good_matches)
+                        print(f"  {method}: {match_score} matches")
+                        score = max(score, match_score)
+                    except Exception as e:
+                        print(f"  {method}: matching failed - {e}")
+                        continue
             if score > best_score:
                 best_score = score
                 best_match = img_path
                 best_person = person
-    if not any_images:
-        print("WARNING: No images found in the dataset. Please check your enhanced_dataset folder structure.")
     
-    # Always print the best match and score, even if below threshold
-    print(f"\n=== MATCH SUMMARY ===")
-    if best_person:
-        print(f"Best match: {best_person} ({best_match}) with {best_score} minutiae matches (threshold: {MATCH_THRESHOLD})")
-        if best_score >= MATCH_THRESHOLD:
-            print(f"RECOGNIZED NAME: {best_person}")
-            # Read matched fingerprint image as base64
-            try:
-                with open(INPUT_SCAN_PATH, "rb") as img_file:
-                    img_b64 = 'data:image/bmp;base64,' + base64.b64encode(img_file.read()).decode("utf-8")
-            except Exception as e:
-                print(f"Failed to read image for base64: {e}")
-                img_b64 = None
-            # Send POST request to API
-            try:
-                response = requests.post(
-                    "http://10.21.55.109:8080/fingerprint",
-                    json={
-                        "name": best_person,
-                        "fingerprint_img": img_b64,
-                        "score": best_score,
-                        "matched": True
-                    },
-                    timeout=5
-                )
-                print(f"API response: {response.status_code} {response.text}")
-            except Exception as e:
-                print(f"Failed to send API request: {e}")
-        else:
-            print(f"No recognized person: best score {best_score} did not meet threshold {MATCH_THRESHOLD}.")
-            # Send API response for unknown person
-            try:
-                response = requests.post(
-                    "http://10.21.55.109:8080/fingerprint",
-                    json={
-                        "name": "Unknown",
-                        "fingerprint_img": None,
-                        "score": best_score,
-                        "matched": False
-                    },
-                    timeout=5
-                )
-                print(f"API response: {response.status_code} {response.text}")
-            except Exception as e:
-                print(f"Failed to send API request: {e}")
+    # Check if best score meets threshold
+    if best_person and best_score >= MATCH_THRESHOLD:
+        print(f"Best match: {best_person} ({best_match}) with {best_score} good matches.")
+        # Read matched fingerprint image as base64
+        try:
+            with open(INPUT_SCAN_PATH, "rb") as img_file:
+                img_b64 = 'data:image/bmp;base64,' + base64.b64encode(img_file.read()).decode("utf-8")
+        except Exception as e:
+            print(f"Failed to read image for base64: {e}")
+            img_b64 = None
+        # Send POST request to API
+        try:
+            response = requests.post(
+                os.environ.get('FINGERPRINT_API_URL', 'http://localhost:8080/fingerprint'),
+                json={
+                    "name": best_person,
+                    "fingerprint_img": img_b64,
+                    "score": best_score,
+                    "matched": True
+                },
+                timeout=5
+            )
+            print(f"API response: {response.status_code} {response.text}")
+        except Exception as e:
+            print(f"Failed to send API request: {e}")
+    elif best_person:
+        print(f"Unknown person: Best match was {best_person} with only {best_score} matches (threshold: {MATCH_THRESHOLD})")
+        # Send API response for unknown person
+        try:
+            response = requests.post(
+                os.environ.get('FINGERPRINT_API_URL', 'http://localhost:8080/fingerprint'),
+                json={
+                    "name": "Unknown",
+                    "fingerprint_img": None,
+                    "score": best_score,
+                    "matched": False
+                },
+                timeout=5
+            )
+            print(f"API response: {response.status_code} {response.text}")
+        except Exception as e:
+            print(f"Failed to send API request: {e}")
     else:
         print("No match found.")

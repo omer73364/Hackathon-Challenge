@@ -1,26 +1,25 @@
+# Feature extraction for fingerprint images
+# You can use OpenCV or custom logic for minutiae/ridge extraction
 
-# Feature extraction for fingerprint images using fingerprint_feature_extractor
 import cv2
-import fingerprint_feature_extractor
+import numpy as np
 
-def extract_minutiae_features(image_path, spuriousMinutiaeThresh=10, invertImage=False, showResult=True, saveResult=True):
+
+def extract_features(image):
     """
-    Extracts minutiae features (terminations and bifurcations) from a fingerprint image using fingerprint_feature_extractor.
-    Args:
-        image_path (str): Path to the fingerprint image file.
-        spuriousMinutiaeThresh (int): Threshold for removing spurious minutiae.
-        invertImage (bool): Whether to invert the image before processing.
-        showResult (bool): Whether to display the result.
-        saveResult (bool): Whether to save the result image.
-    Returns:
-        tuple: (FeaturesTerminations, FeaturesBifurcations)
+    Extract robust features from a preprocessed fingerprint image.
+    Uses SIFT if available, otherwise ORB. Returns both if possible.
     """
-    img = cv2.imread(image_path, 0)
-    FeaturesTerminations, FeaturesBifurcations = fingerprint_feature_extractor.extract_minutiae_features(
-        img,
-        spuriousMinutiaeThresh=spuriousMinutiaeThresh,
-        invertImage=invertImage,
-        showResult=showResult,
-        saveResult=saveResult
-    )
-    return FeaturesTerminations, FeaturesBifurcations
+    features = {}
+    # Try SIFT (best for fingerprints, if available)
+    try:
+        sift = cv2.SIFT_create()
+        kp_sift, desc_sift = sift.detectAndCompute(image, None)
+        features['sift'] = (kp_sift, desc_sift)
+    except AttributeError:
+        features['sift'] = ([], None)
+    # Always compute ORB as fallback/alternative
+    orb = cv2.ORB_create(nfeatures=1000, scaleFactor=1.2, edgeThreshold=15, patchSize=31)
+    kp_orb, desc_orb = orb.detectAndCompute(image, None)
+    features['orb'] = (kp_orb, desc_orb)
+    return features
