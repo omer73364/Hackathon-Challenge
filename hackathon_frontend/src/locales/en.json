@@ -1,0 +1,179 @@
+{
+  "hero": {
+    "welcome": "Hey, Welcome",
+    "title": "FingerPrint Recognition",
+    "subtitle": "The Future of Recognition",
+    "exploreNow": "Explore Now"
+  },
+  "howToUse": {
+    "step1": {
+      "title": "Fixed Your Finger on Device",
+      "description": "Place your finger on the fingerprint scanner device to begin the recognition process."
+    },
+    "step2": {
+      "title": "The Device Will Take Your Finger Print",
+      "description": "The device will capture and process your fingerprint image for analysis."
+    },
+    "step3": {
+      "title": "Your Finger Will Compare with Finger Print in DB",
+      "description": "The system will compare your fingerprint with the stored fingerprints in the database."
+    },
+    "step4": {
+      "title": "The Result Will Be Shown",
+      "description": "The matching result will be displayed showing whether your fingerprint was recognized."
+    }
+  },
+  "fingerprint": {
+    "title": "Fingerprint Scanner",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "error": "Connection Error",
+    "noData": "No Data",
+    "matched": "Fingerprint Matched",
+    "notMatched": "Fingerprint Not Matched",
+    "waiting": "Waiting for fingerprint...",
+    "waitingDesc": "Place your finger on the scanner",
+    "user": "User",
+    "score": "Score",
+    
+    "latency": "latency",
+    "unknown": "Unknown",
+    "upload": {
+      "title": "Upload Fingerprint Image",
+      "selectImage": "Choose Image",
+      "dragHere": "or drag file here",
+      "fileTypes": "PNG, JPG, GIF up to 10MB",
+      "preview": "Image Preview:",
+      "uploading": "Uploading...",
+      "uploadButton": "Upload Image",
+      "reset": "Reset",
+      "success": "Image uploaded successfully!",
+      "error": "Error occurred while uploading image",
+      "selectFirst": "Please select an image first",
+      "uploadedImage": "Uploaded Image",
+      "fileName": "File Name",
+      "fileSize": "File Size",
+      "showUpload": "Show Upload Section",
+      "hideUpload": "Hide Upload Section"
+    }
+  },
+  "common": {
+    "languageToggle": "العربية"
+  },
+  "navbar": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "check": "Check Fingerprint",
+    "logs": "Logs",
+    "users": "Users",
+    "addUser": "Add User",
+    "toggleMenu": "Toggle Menu"
+  },
+  "footer": {
+    "company": {
+      "title": "Fingerprint System",
+      "description": "Advanced fingerprint recognition technology for secure identification and verification."
+    },
+    "links": {
+      "title": "Quick Links",
+      "home": "Home",
+      "check": "Check Fingerprint",
+      "about": "About Us",
+      "contact": "Contact"
+    },
+    "contact": {
+      "title": "Contact Info",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "addressValue": "123 Tech Street, Innovation City"
+    },
+    "copyright": "All rights reserved."
+  },
+  "registerUser": {
+    "title": "Register New User",
+    "description": "Fill out the form below to register a new user in the system. Make sure to enter all required information accurately.",
+    "socketStatus": "Connection Status",
+    "receivedFingerprint": "Received Fingerprint",
+    "fingerprintReceived": "New fingerprint received from scanner",
+    "scannerStatus": "Scanner Status",
+    "fingerprintCount": "fingerprint",
+    "fingerprintLabel": "Fingerprint",
+    "verified": "Verified",
+    "noFingerprints": "No fingerprints added",
+    "addFingerprintDesc": "Use the scanner above to add new fingerprints",
+    "waitingForFingerprint": "Waiting for fingerprint from scanner...",
+    "scannerDisconnected": "Scanner disconnected",
+    "fields": {
+      "name": "Name",
+      "birthday": "Birthday",
+      "phone": "Phone Number",
+      "address": "Address",
+      "gender": "Gender",
+      "fingerprints": "Fingerprints"
+    },
+    "placeholders": {
+      "name": "Enter full name",
+      "phone": "Enter phone number",
+      "address": "Enter full address"
+    },
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "buttons": {
+      "addFingerprint": "Add Fingerprint",
+      "addReceived": "Add",
+      "ignore": "Ignore",
+      "submit": "Register User",
+      "submitting": "Registering...",
+      "addManually": "Add Fingerprint Manually"
+    },
+    "messages": {
+        "success": "User registered successfully!",
+        "error": "Error occurred while registering user",
+        "fillRequired": "Please fill all required fields",
+        "addFingerprintFirst": "Please add at least one fingerprint",
+        "fingerprintAdded": "Fingerprint added successfully",
+        "fingerprintRemoved": "Fingerprint removed"
+      }
+  },
+  "logs": {
+    "title": "Operation Logs",
+    "date": "Date",
+    "time": "Time",
+    "user": "User",
+    "status": "Status",
+    "score": "Score",
+    "matched": "Matched",
+    "notMatched": "Not Matched",
+    "noLogs": "No logs available",
+    "loading": "Loading...",
+    "error": "Error loading logs",
+    "refresh": "Refresh",
+    "export": "Export",
+    "filter": "Filter",
+    "all": "All",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "System statistics overview",
+    "totalPersons": "Total Persons",
+    "totalFingerprints": "Total Fingerprints",
+    "successfulMatches": "Successful Matches",
+    "failedMatches": "Failed Matches",
+    "totalChecks": "Total Checks",
+    "dailyMatches": "Daily Matches",
+    "overallSuccessRate": "Overall Success Rate",
+    "ofTotalAttempts": "of total attempts",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "change": "Change",
+    "loading": "Loading...",
+    "error": "Failed to load dashboard data"
+  }
+}

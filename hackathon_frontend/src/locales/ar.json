@@ -1,0 +1,184 @@
+{
+  "hero": {
+    "welcome": "مرحباً بك",
+    "title": "التعرف على بصمة الإصبع",
+    "subtitle": "مستقبل التعرف على الهوية",
+    "exploreNow": "استكشف الآن"
+  },
+  "howToUse": {
+    "step1": {
+      "title": "ضع إصبعك على الجهاز",
+      "description": "ضع إصبعك على جهاز مسح بصمة الإصبع لبدء عملية التعرف."
+    },
+    "step2": {
+      "title": "الجهاز سيأخذ بصمة إصبعك",
+      "description": "سيقوم الجهاز بالتقاط ومعالجة صورة بصمة إصبعك للتحليل."
+    },
+    "step3": {
+      "title": "ستتم مقارنة بصمتك مع البصمات في قاعدة البيانات",
+      "description": "سيقوم النظام بمقارنة بصمة إصبعك مع البصمات المخزنة في قاعدة البيانات."
+    },
+    "step4": {
+      "title": "ستظهر النتيجة",
+      "description": "ستظهر نتيجة المطابقة موضحة ما إذا كانت بصمة إصبعك قد تم التعرف عليها."
+    }
+  },
+  "fingerprint": {
+    "title": "ماسح بصمة الإصبع",
+    "description": "ضع إصبعك على الماسح للتحقق من هويتك",
+    "scanning": "جاري المسح...",
+    "success": "تم التحقق بنجاح",
+    "failed": "فشل في التحقق",
+    "tryAgain": "حاول مرة أخرى",
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "error": "خطأ في الاتصال",
+    "noData": "لا توجد بيانات",
+    "matched": "تطابقت البصمة",
+    "notMatched": "لم تتطابق البصمة",
+    "waiting": "في انتظار البصمة...",
+    "waitingDesc": "ضع إصبعك على الماسح",
+    "user": "المستخدم",
+    "score": "النتيجة",
+    "unknown": "غير معروف",
+    
+    "latency": "التأخير",
+    "upload": {
+      "title": "رفع صورة بصمة الإصبع",
+      "selectImage": "اختر صورة",
+      "dragHere": "أو اسحب الملف هنا",
+      "fileTypes": "PNG, JPG, GIF حتى 10MB",
+      "preview": "معاينة الصورة:",
+      "uploading": "جاري الرفع...",
+      "uploadButton": "رفع الصورة",
+      "reset": "إعادة تعيين",
+      "success": "تم رفع الصورة بنجاح!",
+      "error": "حدث خطأ أثناء رفع الصورة",
+      "selectFirst": "يرجى اختيار صورة أولاً",
+      "uploadedImage": "الصورة المرفوعة",
+      "fileName": "اسم الملف",
+      "fileSize": "حجم الملف",
+      "showUpload": "إظهار قسم رفع الصور",
+      "hideUpload": "إخفاء قسم رفع الصور"
+    }
+  },
+  "common": {
+    "languageToggle": "English"
+  },
+  "navbar": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "check": "فحص البصمة",
+    "logs": "السجلات",
+    "users": "المستخدمين",
+    "addUser": "إضافة مستخدم",
+    "toggleMenu": "تبديل القائمة"
+  },
+  "footer": {
+    "company": {
+      "title": "نظام بصمة الإصبع",
+      "description": "تقنية متقدمة للتعرف على بصمات الأصابع للتحقق الآمن من الهوية."
+    },
+    "links": {
+      "title": "روابط سريعة",
+      "home": "الرئيسية",
+      "check": "فحص البصمة",
+      "about": "من نحن",
+      "contact": "اتصل بنا"
+    },
+    "contact": {
+      "title": "معلومات الاتصال",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "address": "العنوان",
+      "addressValue": "شارع التقنية 123، مدينة الابتكار"
+    },
+    "copyright": "جميع الحقوق محفوظة."
+  },
+  "registerUser": {
+    "title": "تسجيل مستخدم جديد",
+    "description": "قم بملء النموذج أدناه لتسجيل مستخدم جديد في النظام. تأكد من إدخال جميع المعلومات المطلوبة بدقة.",
+    "socketStatus": "حالة الاتصال",
+    "receivedFingerprint": "البصمة المستلمة",
+    "fingerprintReceived": "تم استلام بصمة جديدة",
+    "scannerStatus": "حالة الماسح",
+    "waitingForFingerprint": "في انتظار البصمة...",
+    "scannerDisconnected": "الماسح غير متصل",
+    "fingerprintCount": "بصمة",
+    "fingerprintLabel": "البصمة",
+    "verified": "تم التحقق",
+    "noFingerprints": "لا توجد بصمات مضافة",
+    "addFingerprintDesc": "استخدم الماسح أعلاه لإضافة بصمات جديدة",
+    "fields": {
+      "name": "الاسم",
+      "birthday": "تاريخ الميلاد",
+      "phone": "رقم الهاتف",
+      "address": "العنوان",
+      "gender": "الجنس",
+      "fingerprints": "البصمات"
+    },
+    "placeholders": {
+      "name": "أدخل الاسم الكامل",
+      "phone": "أدخل رقم الهاتف",
+      "address": "أدخل العنوان الكامل"
+    },
+    "genderOptions": {
+      "male": "ذكر",
+      "female": "أنثى"
+    },
+    "buttons": {
+      "addFingerprint": "إضافة بصمة",
+      "addReceived": "إضافة",
+      "ignore": "تجاهل",
+      "submit": "تسجيل المستخدم",
+      "submitting": "جاري التسجيل...",
+      "addManually": "إضافة بصمة يدوياً"
+    },
+    "messages": {
+        "success": "تم تسجيل المستخدم بنجاح!",
+        "error": "حدث خطأ أثناء تسجيل المستخدم",
+        "fillRequired": "يرجى ملء جميع الحقول المطلوبة",
+        "addFingerprintFirst": "يرجى إضافة بصمة واحدة على الأقل",
+        "fingerprintAdded": "تم إضافة البصمة بنجاح",
+        "fingerprintRemoved": "تم حذف البصمة"
+      }
+  },
+  "logs": {
+    "title": "سجل العمليات",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "user": "المستخدم",
+    "status": "الحالة",
+    "score": "النتيجة",
+    "matched": "تطابق",
+    "notMatched": "عدم تطابق",
+    "noLogs": "لا توجد سجلات",
+    "loading": "جاري التحميل...",
+    "error": "خطأ في تحميل السجلات",
+    "refresh": "تحديث",
+    "export": "تصدير",
+    "filter": "تصفية",
+    "all": "الكل",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "subtitle": "نظرة عامة على إحصائيات النظام",
+    "totalPersons": "إجمالي الأشخاص",
+    "totalFingerprints": "إجمالي البصمات",
+    "successfulMatches": "المطابقات الناجحة",
+    "failedMatches": "المطابقات الفاشلة",
+    "totalChecks": "إجمالي الفحوصات",
+    "dailyMatches": "المطابقات اليومية",
+    "overallSuccessRate": "معدل النجاح الإجمالي",
+    "ofTotalAttempts": "من إجمالي المحاولات",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "change": "التغيير",
+    "loading": "جاري التحميل...",
+    "error": "فشل في تحميل بيانات الداشبورد"
+  }
+}
